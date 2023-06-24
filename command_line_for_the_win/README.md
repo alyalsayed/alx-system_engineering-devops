@@ -1,2 +1,1 @@
-# alx-low_level_programming
-This repo is for alx C Programming tasks 
+# command_line_for_the_win
