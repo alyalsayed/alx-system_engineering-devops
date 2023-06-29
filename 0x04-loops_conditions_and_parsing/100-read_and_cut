@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#displays the content of the file /etc/passwd.
+#only displays username, user id, and Home directory path for the user
+
+while IFS=: read -r username _ uid _ _ home _
+do
+    echo "username: $username"
+    echo "user ID: $uid"
+    echo "home directory: $home"
+    echo ""
+done < /etc/passwd
