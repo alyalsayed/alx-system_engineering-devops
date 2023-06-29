@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# print file names without the number prefix
+for file in *
+do
+    if [[ ! $file =~ ^\..* ]]
+    then
+        echo "${file#*-}"
+    fi
+done
+
