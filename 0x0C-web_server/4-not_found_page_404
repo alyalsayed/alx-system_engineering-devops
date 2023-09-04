@@ -1,29 +1,50 @@
 #!/usr/bin/env bash
-# configuring a nginx server to have a custom 404 page
-# the page must return an HTTP 404 error code
+#Set Up NGINX server to return a page that contains string
 
-apt-get update
-apt-get upgrade
-apt-get install -y nginx
-
-mkdir /etc/nginx/html
-touch /etc/nginx/html/index.html
-echo "Hello World!" > /etc/nginx/html/index.html
-touch /etc/nginx/html/404.html
-echo "Ceci n'est pas une page" > /etc/nginx/html/404.html
-
-print %s "server {
-    listen  80 default_server;
-    listen  [::]:80 default_server;
-    root    /etc/nginx/html;
-    index   index.html
-    }
-
+apt-get -y install nginx
+mkdir -p /data/www
+echo "Holberton School for the win!" > index.html
+echo "Ceci n'est pas une page it's a 404!" > 404.html
+cp index.html /data/www/
+cp 404.html /data/www/
+cat > default <<EOF
+server {
+    listen 80 default_server;
+    root /data/www;
     error_page 404 /404.html;
-    location /404 {
-        root /etc/nginx/html;
+    location / {
+        index index.html index.html;
+    }
+    location = /404.html {
         internal;
+    }
+    location /redirect_me {
+       return 301 https://google.com;
+    }
+}
+EOF
+cp default /etc/nginx/sites-available/default
+cat > nginx.conf <<EOF
+events {
+}
 
-}" > /etc/nginx/sites-available/default
+http {
+    server {
+        listen 80 default_server;
+        root /data/www;
+        error_page 404 /404.html;
+        location / {
+            index index.html index.html;
+        }
+        location = /404.html {
+            internal;
+        }
+        location /redirect_me {
+            return 301 https://google.com;
+        }
 
-service nginx restart
+    }
+}
+EOF
+cp nginx.conf /etc/nginx/nginx.conf
+sudo service nginx restart

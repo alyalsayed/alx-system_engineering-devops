@@ -1,20 +1,18 @@
 #!/usr/bin/env bash
-# this script installs a nginx server that listens on
-# port 80 and retuens a page that contains hello world string
+#Set Up NGINX server to return a page that contains string
 
-apt-get update
-apt-get upgrade
-apt-get install -y nginx
-
-mkdir /etc/nginx/html
-touch /etc/nginx/html/index.html
-echo "Hello World!" > /etc/nginx/html/index.html
-print %s "server {
-    listen  80 default_server;
-    listen  [::]:80 default_server;
-    root    /etc/nginx/html;
-    index   index.html;
-}
-" > /etc/nginx/sites-available/default
-
-service nginx restart
+apt-get -y install nginx
+mkdir -p /data/www
+echo "Holberton School for the win!" > index.html
+cp index.html /data/www/
+cat > default <<EOF
+    server {
+        listen 80 default_server;
+        root /data/www;
+        location / {
+            index index.html index.html;
+        }
+    }
+EOF
+cp default /etc/nginx/sites-available/default
+sudo service nginx restart
