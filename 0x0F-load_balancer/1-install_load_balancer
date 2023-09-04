@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# This configures HAproxy on our server
+apt-get -y install software-properties-common
+add-apt-repository -y ppa:vbernat/haproxy-2.0
+apt-get -y update
+apt-get -y install haproxy=2.0.\*
+
+service haproxy restart
